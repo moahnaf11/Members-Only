@@ -9,7 +9,7 @@
             hour12: false
         }; %>
      
-        <% const formattedDate = new Date(msg.timestamp).toLocaleString('en-US', options).replace(',', ''); %>
+        <% const formattedDate = new Date(msg.timestamp).toLocaleString('en-GB', options).replace(',', ''); %>
          
         <div class="msg msg-<%= index %>">
             <h1><%= msg.title %></h1>

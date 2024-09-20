@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Register</title>
+</head>
+<body>
+    <header>
+        <h1>Message Board</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/log-in">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="register-wrapper">
+            <form class="register-form" action="/register" method="post">
+                <h1>Register</h1>
+                <div>
+                    <div class="forminfo">
+                        <label for="firstname">First Name</label>
+                        <input type="text" id="firstname" name="firstname" placeholder="Mohammad">
+                        <span class="error"></span>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="forminfo">
+                        <label for="lastname">Last Name</label>
+                        <input type="text" id="lastname" name="lastname" placeholder="Ahnaf">
+                        <span class="error"></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="forminfo">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="ahnaf@top.com">
+                        <span class="error"></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="forminfo">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="pass" placeholder="password">
+                        <span class="error"></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="forminfo">
+                        <label for="confirm">Confirm Password</label>
+                        <input type="password" id="confirm" name="confirm-pass" placeholder="password">
+                        <span class="error"></span>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit">Register</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+</body>
+</html>

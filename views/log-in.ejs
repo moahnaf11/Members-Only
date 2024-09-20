@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Log In</title>
+</head>
+<body>
+    <header>
+        <h1>Message Board</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/log-in">Log in</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="login-wrapper">
+            <form class="login-form" action="/log-in" method="post">
+                <h1>Log In</h1>
+                <div>
+                    <div class="forminfo">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="ahnaf@top.com">
+                        <span class="error"></span>
+                    </div>
+                </div>
+    
+                <div>
+                    <div class="forminfo">
+                        <label for="pass">Password</label>
+                        <input type="password" id="pass" name="password" placeholder="password">
+                        <span class="error"></span>
+                    </div>
+                </div>
+    
+                <div class="button-container">
+                    <button type="submit">Log In</button>
+                </div>
+    
+                <div class="register">
+                    Dont't have an account? <a href="/register">Register here</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>
