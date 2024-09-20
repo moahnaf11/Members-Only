@@ -1,0 +1,21 @@
+<section class="msg">
+    <% locals.messages.forEach((msg, index) => { %>
+        <% const options = { 
+            year: 'numeric',
+            month: '2-digit', // 'long' for full month name
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }; %>
+     
+        <% const formattedDate = new Date(msg.timestamp).toLocaleString('en-US', options).replace(',', ''); %>
+         
+        <div class="msg msg-<%= index %>">
+            <h1><%= msg.title %></h1>
+            <div class="author"><%= msg.firstname + " " + msg.lastname  %></div>
+            <div class="time"><%= formattedDate %></div>
+            <div class="text"><%= msg.text %></div>
+        </div>
+    <% }) %>
+</section>
