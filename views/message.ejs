@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>New Message</title>
+</head>
+<body>
+    <header>
+        <h1>Message Board</h1>
+        <nav>
+            <ul>
+                <% if (locals.user) { %>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/log-out">Log out</a></li>
+                <% }    else { %>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/log-in">Log in</a></li>
+                <% } %>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="messageform-wrapper">
+            <% let title, text %>
+            <% if (locals.error && locals.error.length) {
+                locals.error.forEach(err => {
+                    const message = err.msg + " " + "your input was " + (err.value || "an empty string")
+                    if (err.path === "title") {
+                        title = message;
+                    }   else {
+                        text = message;
+                    }
+                })
+            } %>
+            <form class="newmessage-form" action="/new-message" method="post">
+                <h1>Create new Message</h1>
+                <div>
+                    <div class="forminfo">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" placeholder="title" name="title">
+                    </div>
+                    <span class="error"> <%= title || "" %></span>
+                </div>
+
+                <div>
+                    <div class="forminfo">
+                        <label for="text">Text</label>
+                        <input type="text" id="text" placeholder="text" name="text">
+                    </div>
+                    <span class="error"><%= text || "" %></span>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit">Submit message</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

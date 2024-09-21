@@ -1,4 +1,4 @@
-const { getAllMessages, insertUser } = require("../db/queries")
+const { getAllMessages, insertUser, addMessage } = require("../db/queries")
 const {body, validationResult} = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const passport = require("passport");
@@ -44,6 +44,15 @@ const loginValidation = [
     .notEmpty().withMessage("password field cannot be empty")
 ];
 
+const newMessageValidation = [
+    body("title").trim()
+    .notEmpty().withMessage("title field cannot be empty"),
+
+    body("text").trim()
+    .notEmpty().withMessage("text field cannot be empty")
+
+];
+
 
 const getMessages = async (req, res) => {
     const rows = await getAllMessages();
@@ -53,9 +62,14 @@ const getMessages = async (req, res) => {
 }
 
 const logOut = async (req, res) => {
-    req.logout();
-    console.log("logged out", req.user);
-    res.redirect("/");
+    req.logout(err => {
+        if (err) {
+            return next(err);
+        }   else {
+            console.log("req.user", req.user);
+            res.redirect("/");
+        }
+    })
 }
 
 const loginForm = async (req, res) => {
@@ -102,6 +116,28 @@ const submitLoginForm = [
     })
 ];
 
+const newMessageForm = async (req, res) => {
+    res.render("message", {user: req.user});
+}
+
+
+const createNewMessage = [
+    newMessageValidation,
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors.array());
+            res.render("message", {error: errors.array()});
+        }   else {
+            const {title, text} = req.body;
+            const id = req.user.id;
+            const newMessage = await addMessage(id, title, text);
+            res.redirect("/")
+
+        }
+    }
+]
+
 
 
 
@@ -112,5 +148,7 @@ module.exports = {
     registerForm,
     submitRegisterForm,
     submitLoginForm,
-    logOut
+    logOut,
+    newMessageForm,
+    createNewMessage
 }

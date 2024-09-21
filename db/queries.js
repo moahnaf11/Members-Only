@@ -38,7 +38,20 @@ async function insertUser (firstname, lastname, email, password) {
     }   catch(err) {
         console.log(err)
     }
-       
+};
+
+async function addMessage (id, title, text) {
+    const sql = `
+    INSERT INTO messages
+    (user_id, title, text)
+    VALUES 
+        ($1, $2, $3)
+    RETURNING *;
+    `;
+
+    const {rows} = await pool.query(sql, [id, title, text]);
+    console.log(rows);
+    return rows;
 
 }
 
@@ -46,5 +59,6 @@ async function insertUser (firstname, lastname, email, password) {
 module.exports = {
     getUser,
     getAllMessages,
-    insertUser
+    insertUser,
+    addMessage
 }
