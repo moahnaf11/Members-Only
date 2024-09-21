@@ -15,11 +15,13 @@ const PORT = process.env.PORT || 8080;
 // passport config
 
 const customFields = {
-    userNameField: "email"
+    usernameField: "email",
+    passwordField: "password"
 };
 
 const verify = async (email, password, done) => {
     try {
+        console.log("inside verify")
         const rows = await getUser(email);
         const user = rows[0];
 
@@ -42,6 +44,21 @@ const verify = async (email, password, done) => {
 passport.use(
     new LocalStrategy(customFields, verify)
 )
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (userId, done) => {
+    try {
+        const {rows} = await pool.query("SELECT * FROM people WHERE id = $1",[userId]);
+        const user = rows[0];
+        done(null, user);
+
+    }   catch(err) {
+        done(err);
+    }
+})
 
 
 

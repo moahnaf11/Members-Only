@@ -13,11 +13,17 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/log-in">Log in</a></li>
+                <% if (locals.user) { %>
+                    <li><a href="/log-out">Log out</a></li>
+                <% } %>
             </ul>
         </nav>
     </header>
 
     <main>
+        <% if (locals.user) { %>
+            <h1>You are logged in as <%= locals.user.firstname + " " + locals.user.lastname  %></h1>
+        <% } %>
         <h1>Messages</h1>
         <section>
             <%- include("messages",  {messages: locals.messages}) %>

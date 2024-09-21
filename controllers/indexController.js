@@ -47,8 +47,15 @@ const loginValidation = [
 
 const getMessages = async (req, res) => {
     const rows = await getAllMessages();
-    res.render("home", {messages: rows});
+    console.log("req.user", req.user);
+    res.render("home", {messages: rows, user: req.user});
 
+}
+
+const logOut = async (req, res) => {
+    req.logout();
+    console.log("logged out", req.user);
+    res.redirect("/");
 }
 
 const loginForm = async (req, res) => {
@@ -93,7 +100,8 @@ const submitLoginForm = [
         successRedirect: "/",
         failureRedirect: "/log-in"
     })
-]
+];
+
 
 
 
@@ -103,5 +111,6 @@ module.exports = {
     loginForm,
     registerForm,
     submitRegisterForm,
-    submitLoginForm
+    submitLoginForm,
+    logOut
 }
