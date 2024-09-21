@@ -19,43 +19,64 @@
     
     <main>
         <div class="register-wrapper">
+            <% let firstname, lastname, mail, pass, password; %>
+            <% if (locals.error && locals.error.length) {
+                locals.error.forEach(err => {
+                    const message = err.msg + " " + "your input was " + (err.value || "an empty string")
+                    if (err.path === "firstname") {
+                        firstname = message;
+                    }   else if (err.path === "lastname") {
+                        lastname = message;
+                    }   else if (err.path === "mail") {
+                        mail = message;
+                    }   else if (err.path === "pass") {
+                        pass = message;
+                    }   else if (err.path === "confirm-pass" && err.msg === "passwords do not match") {
+                        pass = message;
+                        password = message;
+                    }   else {
+                        password = message;
+
+                    }
+                })
+            } %>
             <form class="register-form" action="/register" method="post">
                 <h1>Register</h1>
                 <div>
                     <div class="forminfo">
                         <label for="firstname">First Name</label>
                         <input type="text" id="firstname" name="firstname" placeholder="Mohammad">
-                        <span class="error"></span>
                     </div>
+                    <span class="error"><%= firstname || "" %></span>
                 </div>
                 
                 <div>
                     <div class="forminfo">
                         <label for="lastname">Last Name</label>
                         <input type="text" id="lastname" name="lastname" placeholder="Ahnaf">
-                        <span class="error"></span>
                     </div>
+                    <span class="error"><%= lastname || "" %></span>
                 </div>
                 <div>
                     <div class="forminfo">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="ahnaf@top.com">
-                        <span class="error"></span>
+                        <label for="mail">Email</label>
+                        <input type="email" id="mail" name="mail" placeholder="ahnaf@top.com">
                     </div>
+                    <span class="error"><%= mail || "" %></span>
                 </div>
                 <div>
                     <div class="forminfo">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="pass" placeholder="password">
-                        <span class="error"></span>
                     </div>
+                    <span class="error"><%= pass || "" %></span>
                 </div>
                 <div>
                     <div class="forminfo">
                         <label for="confirm">Confirm Password</label>
                         <input type="password" id="confirm" name="confirm-pass" placeholder="password">
-                        <span class="error"></span>
                     </div>
+                    <span class="error"><%= password || "" %></span>
                 </div>
 
                 <div class="button-container">

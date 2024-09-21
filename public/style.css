@@ -117,4 +117,9 @@ section.msg > div {
     gap: 20px;
 }
 
+span.error {
+    padding: 10px;
+    display: inline-block;
+}
+
 

@@ -19,22 +19,33 @@
 
     <main>
         <div class="login-wrapper">
+            <% let email, password %>
+            <% if (locals.error && locals.error.length) {
+                locals.error.forEach(err => {
+                    const message = err.msg + " " + "your input was " + (err.value || "an empty string")
+                    if (err.path === "email") {
+                        email = message;
+                    }   else {
+                        password = message;
+                    }
+                })
+            } %>
             <form class="login-form" action="/log-in" method="post">
                 <h1>Log In</h1>
                 <div>
                     <div class="forminfo">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="ahnaf@top.com">
-                        <span class="error"></span>
                     </div>
+                    <span class="error"><%= email || "" %></span>
                 </div>
     
                 <div>
                     <div class="forminfo">
                         <label for="pass">Password</label>
                         <input type="password" id="pass" name="password" placeholder="password">
-                        <span class="error"></span>
                     </div>
+                    <span class="error"><%= password || "" %></span>
                 </div>
     
                 <div class="button-container">

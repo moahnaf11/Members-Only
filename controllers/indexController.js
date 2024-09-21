@@ -1,5 +1,8 @@
-const { getAllMessages } = require("../db/queries")
+const { getAllMessages, insertUser } = require("../db/queries")
 const {body, validationResult} = require("express-validator");
+const asyncHandler = require("express-async-handler");
+const passport = require("passport");
+
 
 const validation = [
     body("firstname").trim()
@@ -12,21 +15,34 @@ const validation = [
     .bail()
     .isAlpha().withMessage("last name field only accpets letters A-Z"),
 
-    body("email").trim()
+    body("mail").trim()
     .notEmpty().withMessage("email field cannot be empty")
     .bail()
     .isEmail().withMessage("please input a valid email"),
 
-    body("pass").trim(),
+    body("pass").trim()
+    .notEmpty().withMessage("password field cannot be empty"),
 
     body("confirm-pass").trim()
+    .notEmpty().withMessage("confirm password field cannot be empty")
+    .bail()
     .custom(async (value, { req }) => {
         if (value !== req.body.pass) {
             throw new Error("passwords do not match");
         }
         return true;
     })
-]
+];
+
+const loginValidation = [
+    body("email").trim()
+    .notEmpty().withMessage("email field cannot be empty")
+    .bail()
+    .isEmail().withMessage("please input a valid email"),
+
+    body("password").trim()
+    .notEmpty().withMessage("password field cannot be empty")
+];
 
 
 const getMessages = async (req, res) => {
@@ -45,14 +61,38 @@ const registerForm = async (req, res) => {
 
 const submitRegisterForm = [
     validation,
-    async (req, res) => {
+    asyncHandler(async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            console.log(errors.array());
             res.render("register", {error: errors.array()});
         }   else {
-            res.redirect("/log-in");
+            const {firstname, lastname, email, password} = req.body;
+            const result = await insertUser(firstname, lastname, email, password);
+            if (!result) {
+                throw new Error("user already exists please enter unique email!");
+            }   else {
+                res.redirect("/log-in");
+            }
         }
-    }
+    })
+];
+
+const submitLoginForm = [
+    loginValidation,
+    async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors.array);
+            res.render("log-in", {error: errors.array()})
+        }   else {
+            return next();
+        }
+    },
+    passport.authenticate("local", {
+        successRedirect: "/",
+        failureRedirect: "/log-in"
+    })
 ]
 
 
@@ -62,5 +102,6 @@ module.exports = {
     getMessages,
     loginForm,
     registerForm,
-    submitRegisterForm
+    submitRegisterForm,
+    submitLoginForm
 }
