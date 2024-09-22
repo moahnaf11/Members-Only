@@ -13,20 +13,22 @@ const createPeopleTable = `
         lastName TEXT NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
-        membership_status BOOLEAN DEFAULT false
+        membership_status BOOLEAN DEFAULT false,
+        admin BOOLEAN DEFAULT false
     );
 `;
 
 const insertPeople = `
     INSERT INTO people
-    (firstName, lastName, email, password)
+    (firstName, lastName, email, password, admin)
     VALUES 
-        ('Mohammad', 'Ahnaf', 'mohammadahnaf123@gmail.com', $1)
+        ('Mohammad', 'Ahnaf', 'mohammadahnaf123@gmail.com', $1, true)
     RETURNING *;
 `;
 
-const createMembersTable = `
+const createMessagesTable = `
     CREATE TABLE IF NOT EXISTS messages (
+        message_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         user_id INTEGER NOT NULL,
         title VARCHAR(255) NOT NULL,
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -61,7 +63,7 @@ async function main() {
     await client.connect();
     await client.query(createPeopleTable);
     const {rows} = await client.query(insertPeople, [hashed]);
-    await client.query(createMembersTable);
+    await client.query(createMessagesTable);
     await client.query(insertMessages, [rows[0].id]);
     await client.end();
     console.log("done");

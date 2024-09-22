@@ -1,7 +1,8 @@
-const { getAllMessages, insertUser, addMessage } = require("../db/queries")
+const { getAllMessages, insertUser, addMessage, updateMembershipStatus, resetMembershipStatus, deleteUserMessage } = require("../db/queries")
 const {body, validationResult} = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const passport = require("passport");
+require("dotenv").config();
 
 
 const validation = [
@@ -53,6 +54,11 @@ const newMessageValidation = [
 
 ];
 
+const secretMemberPasswordValidation = [
+    body("password").trim()
+    .notEmpty().withMessage("password field cannot be empty")
+]
+
 
 const getMessages = async (req, res) => {
     const rows = await getAllMessages();
@@ -62,6 +68,9 @@ const getMessages = async (req, res) => {
 }
 
 const logOut = async (req, res) => {
+    const id = req.user.id;
+    const resetMembership = await resetMembershipStatus(id);
+    console.log(resetMembership);
     req.logout(err => {
         if (err) {
             return next(err);
@@ -88,8 +97,8 @@ const submitRegisterForm = [
             console.log(errors.array());
             res.render("register", {error: errors.array()});
         }   else {
-            const {firstname, lastname, email, password} = req.body;
-            const result = await insertUser(firstname, lastname, email, password);
+            const {firstname, lastname, mail, pass, admin} = req.body;
+            const result = await insertUser(firstname, lastname, mail, pass, admin);
             if (!result) {
                 throw new Error("user already exists please enter unique email!");
             }   else {
@@ -139,6 +148,40 @@ const createNewMessage = [
 ]
 
 
+const secretMemberForm = async (req, res) => {
+    res.render("secretmember")
+}
+
+const submitSecretMemberForm = [
+    secretMemberPasswordValidation,
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors.array());
+            res.render("secretmember", {error: errors.array()})
+        }   else {
+            if (req.body.password === process.env.MEMBER_PASSWORD) {
+                const updateRow = await updateMembershipStatus(req.user.id);
+                res.redirect("/");
+            }   else {
+                res.render("secretmember", {error: "incorrect password"});
+            }
+
+        }
+    }
+]
+
+
+const deleteMessage = async (req, res) => {
+    const deletedRow = await deleteUserMessage(req.body.messageid);
+    res.redirect("/");
+
+
+
+
+
+}
+
 
 
 
@@ -150,5 +193,8 @@ module.exports = {
     submitLoginForm,
     logOut,
     newMessageForm,
-    createNewMessage
+    createNewMessage,
+    secretMemberForm,
+    submitSecretMemberForm,
+    deleteMessage
 }

@@ -14,20 +14,21 @@ async function getAllMessages () {
     return rows;
 }
 
-async function insertUser (firstname, lastname, email, password) {
+async function insertUser (firstname, lastname, mail, pass, admin) {
     try {
-        const {rows} = await pool.query("SELECT * FROM people WHERE email = $1", [email]);
+        const isAdmin = admin === "on" ? true : false;
+        const {rows} = await pool.query("SELECT * FROM people WHERE email = $1", [mail]);
         if (rows.length === 0) {
-            const hashedPassword = await bcrypt.hash(password, 10);
+            const hashedPassword = await bcrypt.hash(pass, 10);
 
             const sql = `
             INSERT INTO people 
-            (firstname, lastname, email, password)
+            (firstname, lastname, email, password, admin)
             VALUES 
-                ($1, $2, $3, $4)
+                ($1, $2, $3, $4, $5)
             RETURNING *;
             `;
-            const {rows} = await pool.query(sql, [firstname, lastname, email, hashedPassword]);
+            const {rows} = await pool.query(sql, [firstname, lastname, mail, hashedPassword, isAdmin]);
             console.log(rows);
             return true;
 
@@ -55,10 +56,51 @@ async function addMessage (id, title, text) {
 
 }
 
+async function updateMembershipStatus(id) {
+    const sql = `
+    UPDATE people
+    SET membership_status = true
+    WHERE id = $1
+    RETURNING *;
+    `;
+
+    const {rows} = await pool.query(sql, [id]);
+    console.log(rows);
+    return rows;
+}
+
+async function resetMembershipStatus(id) {
+    const sql = `
+    UPDATE people
+    SET membership_status = false
+    WHERE id = $1
+    RETURNING *;
+    `;
+
+    const {rows} = await pool.query(sql, [id]);
+    console.log(rows);
+    return rows;
+}
+
+async function deleteUserMessage (id) {
+    const sql = `
+    DELETE FROM messages
+    WHERE message_id = $1
+    RETURNING *;
+    `;
+    const {rows} = await pool.query(sql, [id]);
+    console.log(rows);
+    return rows;
+
+}
+
 
 module.exports = {
     getUser,
     getAllMessages,
     insertUser,
-    addMessage
+    addMessage,
+    updateMembershipStatus,
+    resetMembershipStatus,
+    deleteUserMessage
 }

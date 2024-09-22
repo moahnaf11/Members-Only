@@ -14,9 +14,15 @@
     <section class="msg">
         <div class="msg msg-<%= index %>">
             <h1><%= msg.title %></h1>
-            <div class="author"><%= msg.firstname + " " + msg.lastname  %></div>
-            <div class="time"><%= formattedDate %></div>
+            <div class="author"><%= locals.user && locals.user.membership_status ? msg.firstname + " " + msg.lastname : "" %></div>
+            <div class="time"><%= locals.user && locals.user.membership_status ? formattedDate : "DD/MM/YYYY" %></div>
             <div class="text"><%= msg.text %></div>
         </div>
+        <% if (locals.user && locals.user.admin) { %>
+            <form action="/deletemsg" method="post">
+                <input type="hidden" name="messageid" value="<%= msg.message_id %>">
+                <button>Delete</button>
+            </form>
+        <% } %>
     </section>
 <% }) %>

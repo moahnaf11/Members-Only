@@ -27,11 +27,17 @@
         <% if (locals.user) { %>
             <h1>You are logged in as <%= locals.user.firstname + " " + locals.user.lastname  %></h1>
             <div><a href="/new-message">Create a new Message</a></div>
-            <!-- <div><a href="/club-member">Become a member</a></div> -->
+            <% if (!locals.user.membership_status) { %>
+                <div><a href="/club-member">Become a member</a></div>
+            <% } %>
         <% } %>
+
         <h1>Messages</h1>
+        <% if (locals.user && locals.user.membership_status) { %>
+            <h1>You are in the secret club</h1>
+        <% } %>
         <section>
-            <%- include("messages",  {messages: locals.messages}) %>
+            <%- include("messages",  {messages: locals.messages, user: locals.user}) %>
         </section>
 
 

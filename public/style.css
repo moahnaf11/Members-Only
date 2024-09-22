@@ -60,7 +60,7 @@ section.msg > div {
     gap: 10px;
 }
 
-.login-wrapper, .messageform-wrapper {
+.login-wrapper, .messageform-wrapper, .secretmember-wrapper {
     height: 100%;
 }
 
@@ -71,7 +71,7 @@ section.msg > div {
     gap: 15px;
 }
 
-.login-form > div, .register-form > div, .newmessage-form > div {
+.login-form > div, .register-form > div, .newmessage-form > div, .secretmember-form {
     display: flex;
     flex-direction: column;
 }
@@ -98,7 +98,7 @@ section.msg > div {
     width: 35%;
 }
 
-.login-form div.button-container, .register-form div.button-container, .newmessage-form div.button-container {
+.login-form div.button-container, .register-form div.button-container, .newmessage-form div.button-container, .secretmember-form div.button-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -122,5 +122,13 @@ span.error {
     padding: 10px;
     display: inline-block;
 }
+
+.secretmember-wrapper button {
+    padding: 10px 15px;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+
 
 
